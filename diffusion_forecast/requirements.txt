@@ -1,0 +1,11 @@
+torch
+torch_timeseries==0.1.10
+torchmetrics
+CRPS
+fire
+tqdm
+numpy
+pandas
+scipy
+pyarrow
+matplotlib
