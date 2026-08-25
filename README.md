@@ -78,6 +78,25 @@ of the Tennessee Valley basins, chosen for their high streamflow
 observation coverage, so the repository can be cloned and run end-to-end
 without downloading the full dataset.
 
+## Full datasets
+
+The complete datasets are available for download here:
+[OneDrive link](https://rutgersconnect-my.sharepoint.com/:u:/g/personal/yf474_scarletmail_rutgers_edu/IQAWuS4GdUGjRIDdYdF4vsj7AVsXSWJKG7WeU-lREIeBG0w)
+
+- `camelsh_tennessee.parquet` — the 130 Tennessee Valley basins (~1.3 GB)
+- `camelsh_global.parquet` — all 618 basins (130 TVA + 488 auxiliary, ~6.5 GB)
+
+After downloading, run the same pipeline against either file:
+
+```bash
+bash run_forecast.sh --parquet /path/to/camelsh_tennessee.parquet   # 130 TVA basins
+bash run_forecast.sh --parquet /path/to/camelsh_global.parquet     # all 618 basins
+```
+
+Note: preprocessing the 618-basin file needs a machine with large RAM, and
+training memory grows with the basin count (the batch size equals the number
+of basins).
+
 Date splits (editable at the top of `preprocess_camelsh_forecast.py`):
 
 - Train: 1997-01-01 to 2018-12-31
