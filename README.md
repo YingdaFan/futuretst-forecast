@@ -1,16 +1,20 @@
-# FutureTST Hourly Streamflow Forecasting Demo
+# FutureTST for Hourly Streamflow Forecasting in the Tennessee Valley
 
-Multi-step hourly streamflow forecasting on CAMELS-H data with FutureTST, an
-encoder-decoder Transformer that conditions on known future meteorological
-inputs. The pipeline covers preprocessing, training, and evaluation.
+Machine-learning code for hourly streamflow forecasting in the Tennessee
+Valley region, developed to support hydropower inflow forecasting. The model
+is FutureTST, an encoder-decoder Transformer that conditions on known future
+meteorological inputs to predict streamflow up to 18 hours ahead. The
+repository contains the complete pipeline — preprocessing, training, and
+evaluation — on CAMELS-H hourly data, and includes a 5-basin subset of the
+data so the full workflow can be run directly after cloning.
 
 ## Layout
 
 ```
-futuretstdemo/
+.
 ├── run_forecast.sh                  # runs the full pipeline
 ├── data/
-│   └── camelsh_demo.parquet         # demo data: 5 basins, hourly, 1990-2022
+│   └── camelsh_demo.parquet         # included subset: 5 TVA basins, hourly, 1990-2022
 ├── data_processing/
 │   ├── preprocess_camelsh_forecast.py   # parquet -> prepped.npz
 │   └── postprocess_forecast.py          # denormalization + NSE/KGE/RMSE metrics + plots
@@ -62,21 +66,22 @@ and cumulative potential evaporation, for 44 input features in total.
 
 ## Basin selection
 
-The full study trains a single FutureTST model jointly on 618 basins:
-the 130 basins of the Tennessee Valley region plus 488 auxiliary basins
-drawn from the full CAMELS-H archive (~9,000 gauges). Auxiliary basins were
-required to have at least 97% hourly streamflow completeness and were then
-ranked by hydroclimatic similarity to the Tennessee Valley basins using
-standard catchment attributes (aridity index, mean precipitation, snow
-fraction, elevation, slope, drainage area). This supplies the model with
-additional training basins whose rainfall-runoff behavior is transferable
-to the Tennessee Valley region while keeping noisy hourly records out of
-training.
+The study uses two training configurations. The first trains a single
+FutureTST model jointly on the 130 basins of the Tennessee Valley region.
+The second trains jointly on 618 basins: the 130 TVA basins plus 488
+auxiliary basins drawn from the full CAMELS-H archive (~9,000 gauges).
+Auxiliary basins were required to have at least 97% hourly streamflow
+completeness and were then ranked by hydroclimatic similarity to the
+Tennessee Valley basins using standard catchment attributes (aridity index,
+mean precipitation, snow fraction, elevation, slope, drainage area). This
+supplies the model with additional training basins whose rainfall-runoff
+behavior is transferable to the Tennessee Valley region while keeping noisy
+hourly records out of training.
 
-The bundled demo dataset (`data/camelsh_demo.parquet`) is a 5-basin subset
-of the Tennessee Valley basins, chosen for their high streamflow
-observation coverage, so the repository can be cloned and run end-to-end
-without downloading the full dataset.
+The included dataset (`data/camelsh_demo.parquet`) is a 5-basin subset of
+the Tennessee Valley basins, chosen for their high streamflow observation
+coverage, so the repository can be cloned and run end-to-end without
+downloading the full dataset.
 
 ## Full datasets
 
@@ -94,9 +99,9 @@ bash run_forecast.sh --parquet /path/to/camelsh_tennessee.parquet   # 130 TVA ba
 bash run_forecast.sh --parquet /path/to/camelsh_global.parquet      # all 618 basins
 ```
 
-Note that training on the full datasets is substantially heavier than the
-demo: preprocessing the 618-basin dataset needs tens of GB of RAM, and one
-training batch holds one time window for every basin.
+Note that training on the full datasets is substantially heavier than on
+the included subset: preprocessing the 618-basin dataset needs tens of GB
+of RAM, and one training batch holds one time window for every basin.
 
 Date splits (editable at the top of `preprocess_camelsh_forecast.py`):
 
@@ -121,15 +126,21 @@ meteorological forcings inform the streamflow prediction. There is no
 diffusion component.
 
 **Does the code download CAMELS-H data automatically?**
-No. Everything runs offline. The repo ships with the 5-basin demo parquet,
-and `run_forecast.sh` takes it through preprocessing, training, evaluation,
-and plotting. For the full experiments, download a dataset from the OneDrive
+No. Everything runs offline. The repo ships with the 5-basin parquet, and
+`run_forecast.sh` takes it through preprocessing, training, evaluation, and
+plotting. For the full experiments, download a dataset from the OneDrive
 link above and pass it with `--parquet`.
 
-**How many basins were used in the actual study?**
+**How many basins were used in the study?**
 Two configurations: a single model trained jointly on the 130 Tennessee
 Valley basins, and a single model trained jointly on 618 basins (the 130 TVA
 basins plus 488 auxiliary basins; see "Basin selection"). Both datasets are
 on OneDrive and both runs use the same script, differing only in the
-`--parquet` argument. The 5 demo basins are TVA basins with high observation
-coverage.
+`--parquet` argument. The 5 included basins are TVA basins with high
+observation coverage.
+
+## Acknowledgement
+
+This work was supported by the U.S. Department of Energy's Hydropower and
+Hydrokinetic Office (H2O). We gratefully acknowledge this support for the
+development of machine-learning methods for hydropower inflow forecasting.
