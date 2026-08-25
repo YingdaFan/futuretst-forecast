@@ -110,3 +110,26 @@ Date splits (editable at the top of `preprocess_camelsh_forecast.py`):
 - `futuretst/output/denorm/` — denormalized prediction vs observation CSVs and per-basin metrics (NSE, KGE, RMSE, ...)
 - `futuretst/output/figure/` — prediction vs observation plots per basin
 - `futuretst/results/` — model checkpoints
+
+## FAQ
+
+**What model is this?**
+FutureTST, an encoder-decoder Transformer for time series forecasting. Its
+distinguishing feature is that the decoder attends to the exogenous inputs
+over the forecast horizon as well as the history, so known future
+meteorological forcings inform the streamflow prediction. There is no
+diffusion component.
+
+**Does the code download CAMELS-H data automatically?**
+No. Everything runs offline. The repo ships with the 5-basin demo parquet,
+and `run_forecast.sh` takes it through preprocessing, training, evaluation,
+and plotting. For the full experiments, download a dataset from the OneDrive
+link above and pass it with `--parquet`.
+
+**How many basins were used in the actual study?**
+Two configurations: a single model trained jointly on the 130 Tennessee
+Valley basins, and a single model trained jointly on 618 basins (the 130 TVA
+basins plus 488 auxiliary basins; see "Basin selection"). Both datasets are
+on OneDrive and both runs use the same script, differing only in the
+`--parquet` argument. The 5 demo basins are TVA basins with high observation
+coverage.
