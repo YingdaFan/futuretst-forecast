@@ -14,7 +14,7 @@ futuretstdemo/
 ├── data_processing/
 │   ├── preprocess_camelsh_forecast.py   # parquet -> prepped.npz
 │   └── postprocess_forecast.py          # denormalization + NSE/KGE/RMSE metrics + plots
-└── diffusion_forecast/
+└── futuretst/
     ├── requirements.txt
     └── src/                         # FutureTST model and training code
 ```
@@ -22,7 +22,7 @@ futuretstdemo/
 ## Setup
 
 ```bash
-pip install -r diffusion_forecast/requirements.txt
+pip install -r futuretst/requirements.txt
 ```
 
 A GPU is expected (`--device cuda` by default).
@@ -68,7 +68,7 @@ Date splits (editable at the top of `preprocess_camelsh_forecast.py`):
 
 ## Outputs
 
-- `diffusion_forecast/output/pred/tst.npy` — normalized sliding-window predictions (stride 24 by default)
-- `diffusion_forecast/output/denorm/` — denormalized prediction vs observation CSVs and per-basin metrics (NSE, KGE, RMSE, ...)
-- `diffusion_forecast/output/figure/` — prediction vs observation plots per basin
-- `diffusion_forecast/results/` — model checkpoints
+- `futuretst/output/pred/tst.npy` — normalized sliding-window predictions (stride 24 by default)
+- `futuretst/output/denorm/` — denormalized prediction vs observation CSVs and per-basin metrics (NSE, KGE, RMSE, ...)
+- `futuretst/output/figure/` — prediction vs observation plots per basin
+- `futuretst/results/` — model checkpoints

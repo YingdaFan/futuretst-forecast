@@ -61,7 +61,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-DIFFUSION_DIR="$SCRIPT_DIR/diffusion_forecast"
+MODEL_DIR="$SCRIPT_DIR/futuretst"
 DATA_DIR="$SCRIPT_DIR/data_processing"
 
 # Resolve the parquet path relative to this script's directory
@@ -92,7 +92,7 @@ cd "$DATA_DIR"
 python3 preprocess_camelsh_forecast.py --parquet "$PARQUET" $BASINS
 echo ""
 
-cd "$DIFFUSION_DIR"
+cd "$MODEL_DIR"
 export PYTHONPATH=./
 
 # batch_size = number of basins
@@ -122,7 +122,7 @@ echo "[Step 3/3] Postprocessing predictions..."
 echo "=========================================="
 cd "$SCRIPT_DIR"
 python3 data_processing/postprocess_forecast.py \
-    --pred_dir "$DIFFUSION_DIR/output/pred" \
+    --pred_dir "$MODEL_DIR/output/pred" \
     --partition tst \
     --step_index $STEP_INDEX \
     --window $WINDOWS \
@@ -133,7 +133,7 @@ echo ""
 echo "=========================================="
 echo "Forecasting Pipeline Complete!"
 echo "=========================================="
-echo "Predictions (normalized): $DIFFUSION_DIR/output/pred/"
-echo "Predictions (denormalized): $DIFFUSION_DIR/output/denorm/"
-echo "Model checkpoints: $DIFFUSION_DIR/results/"
+echo "Predictions (normalized): $MODEL_DIR/output/pred/"
+echo "Predictions (denormalized): $MODEL_DIR/output/denorm/"
+echo "Model checkpoints: $MODEL_DIR/results/"
 echo "=========================================="
