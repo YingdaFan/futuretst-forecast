@@ -60,6 +60,24 @@ The input parquet has one row per (basin, hour) with columns:
 Preprocessing adds 24/72/168-hour cumulative rainfall, mean air temperature,
 and cumulative potential evaporation, for 44 input features in total.
 
+## Basin selection
+
+The full study trains a single FutureTST model jointly on 618 basins:
+the 130 basins of the Tennessee Valley region plus 488 auxiliary basins
+drawn from the full CAMELS-H archive (~9,000 gauges). Auxiliary basins were
+required to have at least 97% hourly streamflow completeness and were then
+ranked by hydroclimatic similarity to the Tennessee Valley basins using
+standard catchment attributes (aridity index, mean precipitation, snow
+fraction, elevation, slope, drainage area). This supplies the model with
+additional training basins whose rainfall-runoff behavior is transferable
+to the Tennessee Valley region while keeping noisy hourly records out of
+training.
+
+The bundled demo dataset (`data/camelsh_demo.parquet`) is a 5-basin subset
+of the Tennessee Valley basins, chosen for their high streamflow
+observation coverage, so the repository can be cloned and run end-to-end
+without downloading the full dataset.
+
 Date splits (editable at the top of `preprocess_camelsh_forecast.py`):
 
 - Train: 1997-01-01 to 2018-12-31
